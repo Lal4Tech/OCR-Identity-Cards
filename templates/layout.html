@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+
+    {% if title %}
+        <title>{{ title }}</title>
+    {% else %}
+        <title>Dilip Puri</title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top" default color="#777">
+        <div class="container">
+          <a class="navbar-brand mr-1" href="/">TC OCR</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <!--
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="/">Home</a>
+            </div>
+
+             Navbar Right Side
+            <div class="navbar-nav">
+              <a class="nav-item nav-link" href="/about">About Me</a>
+            </div>
+          </div> -->
+        </div>
+      </nav>
+    </header>
+
+    <!-- Navbar Right Side -->
+    <main role="main" class="container">
+
+    <div class="col-md-12">
+        <h3 align="center">Analysis of Doc Image</h3>
+        <h6 align="justify">Extract rich information from image(s) to categorize and process visual data—and perform machine-assisted moderation of image(s) to help curate your services.</h6>
+    </div>
+
+    <div class="container">
+        <hr class="hr-text" data-content="See It in Action">
+    </div>
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+    	    <input type="file" name="fileToUpload" id="fileToUpload" class="button">
+    	    <input type="submit" value="Submit" name="submit" class="button">
+		</form>
+
+    <div class="col-md-12">
+        <!--<div class="col-md-6">
+	    <img src="static/banner.jpg" alt="demo image" role="presentation" height="400" width="500">
+	</div>  -->
+
+    <div id="table-scroll" style="overflow-x:auto;">
+        <table class="fixed">
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>phone</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>AAAA</td>
+                    <td>323232</td>
+                </tr>
+                <tr>
+                    <td>BBBBB</td>
+                    <td>323232</td>
+                </tr>
+                <tr>
+                    <td>CCCCC</td>
+                    <td>3435656</td>
+                </tr>
+                <tr>
+                    <td>AAAA</td>
+                    <td>323232</td>
+                </tr>
+                <tr>
+                    <td>BBBBB</td>
+                    <td>323232</td>
+                </tr>
+                <tr>
+                    <td>CCCCC</td>
+                    <td>3435656</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+ </main>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
