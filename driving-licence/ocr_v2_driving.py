@@ -176,10 +176,10 @@ try:
     name = name.lstrip()
 
     # Cleaning DOB
-    dob = text0[7]
+    dob = text0[4]
     dob = dob.rstrip()
     dob = dob.lstrip()
-    dob = dob[-12:]
+    dob = dob[4:7]
 
     # Cleaning Passport Number
     number = text0[1]
