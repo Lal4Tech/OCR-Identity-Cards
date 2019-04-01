@@ -281,7 +281,7 @@ def process_image(path, out_path):
     text_im.save(out_path)
     print('%s -> %s' % (path, out_path))
 
-
+'''
 if __name__ == '__main__':
     if len(sys.argv) == 2 and '*' in sys.argv[1]:
         files = glob.glob(sys.argv[1])
@@ -297,3 +297,12 @@ if __name__ == '__main__':
             process_image(path, out_path)
         except Exception as e:
             print('%s %s' % (path, e))
+'''
+
+if __name__ == '__main__':
+    path = 'pan_card_template.jpg'
+    out_path = 'pancard-cropped1.jpg'
+    try:
+        process_image(path, out_path)
+    except Exception as e:
+        print('%s %s' % (path, e))

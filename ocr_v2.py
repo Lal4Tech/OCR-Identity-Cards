@@ -313,6 +313,8 @@ with open('data.json', encoding = 'utf-8') as data_file:
 with open('data.json', 'r', encoding= 'utf-8') as f:
     ndata = json.load(f)
 
+print(ndata)
+
 print('\t', "|+++++++++++++++++++++++++++++++|")
 print('\t', '|', '\t', ndata['Name'])
 print('\t', "|-------------------------------|")
