@@ -128,11 +128,9 @@ text = ftfy.fix_encoding(text)
 
 # Initializing data variable
 surname = None
-first_name = None
 dob = None
-gender = None
-number = None
 doe = None
+number = None
 text0 = []
 text1 = []
 
@@ -171,17 +169,11 @@ def findword(textlist, wordstring):
 ###############################################################################################################
 try:
 
-    # Cleaning Surname
-    surname = text0[3]
-    surname = surname.rstrip()
-    surname = surname.lstrip()
-    surname = re.sub('[^a-zA-Z] +', ' ', surname)
-
-    # Cleaning First Name
-    first_name = text0[5]
-    first_name = first_name.rstrip()
-    first_name = first_name.lstrip()
-    first_name = re.sub('[^a-zA-Z] +', ' ', first_name)
+    # Cleaning name
+    name = text0[5]
+    name = re.sub('[^a-zA-Z]+', ' ', name)
+    name = name.rstrip()
+    name = name.lstrip()
 
     # Cleaning DOB
     dob = text0[7]
@@ -189,13 +181,9 @@ try:
     dob = dob.lstrip()
     dob = dob[-12:]
 
-    # Cleaning Gender
-    gender = text0[4]
-    gender = 'M' # need to fix this
-
     # Cleaning Passport Number
     number = text0[1]
-    number = number[-8:]
+    number = number[-21:-6]
     number = number.rstrip()
     number = number.lstrip()
 
@@ -210,10 +198,8 @@ except:
 
 # Making tuples of data
 data = {}
-data['Surname'] = surname
-data['First Name'] = first_name
+data['Name'] = name
 data['Date of Birth'] = dob
-data['Gender'] = gender
 data['Number'] = number
 data['Date of Expiry'] = doe
 
