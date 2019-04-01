@@ -72,30 +72,6 @@ elif args["preprocess"] == "cubic":
 
 # make a check to see if blurring should be done to remove noise, first is default median blurring
 
-'''
-1. Gaussian Blurring works in a similar fashion to Averaging, but it uses Gaussian kernel, 
-instead of a normalized box filter, for convolution. Here, the dimensions of the kernel and standard deviations 
-in both directions can be determined independently. 
-Gaussian blurring is very useful for removing — guess what? — 
-gaussian noise from the image. On the contrary, gaussian blurring does not preserve the edges in the input.
-
-2. In Median Blurring the central element in the kernel area is replaced with the median of all the pixels under the 
-kernel. Particularly, this outperforms other blurring methods in removing salt-and-pepper noise in the images.
-
-Median blurring is a non-linear filter. Unlike linear filters, median blurring replaces the pixel values 
-with the median value available in the neighborhood values. So, median blurring preserves edges 
-as the median value must be the value of one of neighboring pixels
-
-3. Speaking of keeping edges sharp, bilateral filtering is quite useful for removing the noise without 
-smoothing the edges. Similar to gaussian blurring, bilateral filtering also uses a gaussian filter 
-to find the gaussian weighted average in the neighborhood. However, it also takes pixel difference into 
-account while blurring the nearby pixels.
-
-Thus, it ensures only those pixels with similar intensity to the central pixel are blurred, 
-whereas the pixels with distinct pixel values are not blurred. In doing so, the edges that have larger 
-intensity variation, so-called edges, are preserved.
-'''
-
 if args["preprocess"] == "blur":
     gray = cv2.medianBlur(gray, 3)
 
@@ -109,18 +85,6 @@ elif args["preprocess"] == "gauss":
 # apply OCR to it
 filename = "{}.png".format(os.getpid())
 cv2.imwrite(filename, gray)
-
-'''
-A blurring method may be applied. We apply a median blur when the --preprocess flag is set to blur. 
-Applying a median blur can help reduce salt and pepper noise, again making it easier for Tesseract 
-to correctly OCR the image.
-
-After pre-processing the image, we use  os.getpid to derive a temporary image filename based on the process ID 
-of our Python script.
-
-The final step before using pytesseract for OCR is to write the pre-processed image, gray, 
-to disk saving it with the filename  from above
-'''
 
 ##############################################################################################################
 ######################################## Section 3: Running PyTesseract ######################################
@@ -163,16 +127,14 @@ text = ftfy.fix_encoding(text)
 ############################################################################################################
 
 # Initializing data variable
-name = None
-fname = None
+surname = None
+first_name = None
 dob = None
-pan = None
-nameline = []
-dobline = []
-panline = []
+gender = None
+number = None
+doe = None
 text0 = []
 text1 = []
-text2 = []
 
 # Searching for PAN
 lines = text.split('\n')
@@ -186,32 +148,9 @@ for lin in lines:
 text1 = list(filter(None, text1))
 # print(text1)
 
-'''
-Note: Hindi has the worst error rates in tesseract and creates noise in image. Tesseract doesn't work well with noisy
-data 
-Reference: https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/35248.pdf
-
-1. Income Tax Department Government of India (the text might be distorted due to quality of image or inherent problems
-with tesseractocr and its inability to distinguish seamlessly between languages not native to the module or not as 
-developed - such as Hindi.)
-2. Name of the PAN Card Holder
-3. Father's Name
-4. Date of Birth in MM/DD/YYYY format as listed in the PAN Card
-5. ----Permanent Account Number---- text that is a named entity in the PAN Card (not the actual PAN Card Number)
-6. Permanent Account Number in the format ABCDE1234F
-7. Signature as normal text - named entity in the PAN Card
-'''
-
 # to remove any text read from the image file which lies before the line 'Income Tax Department'
 
 lineno = 0  # to start from the first line of the text file.
-
-for wordline in text1:
-    xx = wordline.split('\n')
-    if ([w for w in xx if re.search('(INCOMETAXDEPARWENT @|mcommx|INCOME|TAX|GOW|GOVT|GOVERNMENT|OVERNMENT|VERNMENT|DEPARTMENT|EPARTMENT|PARTMENT|ARTMENT|INDIA|NDIA)$', w)]):
-        text1 = list(text1)
-        lineno = text1.index(wordline)
-        break
 
 # text1 = list(text1)
 text0 = text1[lineno+1:]
@@ -230,61 +169,54 @@ def findword(textlist, wordstring):
 ###############################################################################################################
 ######################################### Section 5: Dishwasher part ##########################################
 ###############################################################################################################
-
 try:
 
-    # Cleaning first names, better accuracy
-    name = text0[0]
-    name = name.rstrip()
-    name = name.lstrip()
-    name = name.replace("8", "B")
-    name = name.replace("0", "D")
-    name = name.replace("6", "G")
-    name = name.replace("1", "I")
-    name = re.sub('[^a-zA-Z] +', ' ', name)
+    # Cleaning Surname
+    surname = text0[3]
+    surname = surname.rstrip()
+    surname = surname.lstrip()
+    surname = re.sub('[^a-zA-Z] +', ' ', surname)
 
-    # Cleaning Father's name
-    fname = text0[1]
-    fname = fname.rstrip()
-    fname = fname.lstrip()
-    fname = fname.replace("8", "S")
-    fname = fname.replace("0", "O")
-    fname = fname.replace("6", "G")
-    fname = fname.replace("1", "I")
-    fname = fname.replace("\"", "A")
-    fname = re.sub('[^a-zA-Z] +', ' ', fname)
+    # Cleaning First Name
+    first_name = text0[5]
+    first_name = first_name.rstrip()
+    first_name = first_name.lstrip()
+    first_name = re.sub('[^a-zA-Z] +', ' ', first_name)
 
     # Cleaning DOB
-    dob = text0[2]
+    dob = text0[7]
     dob = dob.rstrip()
     dob = dob.lstrip()
-    dob = dob.replace('l', '/')
-    dob = dob.replace('L', '/')
-    dob = dob.replace('I', '/')
-    dob = dob.replace('i', '/')
-    dob = dob.replace('|', '/')
-    dob = dob.replace('\"', '/1')
-    dob = dob.replace(" ", "")
+    dob = dob[-12:]
 
-    # Cleaning PAN Card details
-    text0 = findword(text1, '(Pormanam|Number|umber|Account|ccount|count|Permanent|ermanent|manent|wumm)$')
-    panline = text0[0]
-    pan = panline.rstrip()
-    pan = pan.lstrip()
-    pan = pan.replace(" ", "")
-    pan = pan.replace("\"", "")
-    pan = pan.replace(";", "")
-    pan = pan.replace("%", "L")
+    # Cleaning Gender
+    gender = text0[4]
+    gender = 'M' # need to fix this
+
+    # Cleaning Passport Number
+    number = text0[1]
+    number = number[-8:]
+    number = number.rstrip()
+    number = number.lstrip()
+
+    # Cleaning DOE
+    doe = text0[14]
+    gender = gender.replace("|", "")
+    doe = doe.rstrip()
+    doe = doe.lstrip()
+    doe = doe[-12:-2]
 
 except:
     pass
 
 # Making tuples of data
 data = {}
-data['Name'] = name
-data['Father Name'] = fname
+data['Surname'] = surname
+data['First Name'] = first_name
 data['Date of Birth'] = dob
-data['PAN'] = pan
+data['Gender'] = gender
+data['Number'] = number
+data['Date of Expiry'] = doe
 
 # print(data)
 
@@ -314,13 +246,3 @@ with open('data.json', 'r', encoding= 'utf-8') as f:
     ndata = json.load(f)
 
 print(ndata)
-
-print('\t', "|+++++++++++++++++++++++++++++++|")
-print('\t', '|', '\t', ndata['Name'])
-print('\t', "|-------------------------------|")
-print('\t', '|', '\t', ndata['Father Name'])
-print('\t', "|-------------------------------|")
-print('\t', '|', '\t', ndata['Date of Birth'])
-print('\t', "|-------------------------------|")
-print('\t', '|', '\t', ndata['PAN'])
-print('\t', "|+++++++++++++++++++++++++++++++|")
